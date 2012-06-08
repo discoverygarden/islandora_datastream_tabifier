@@ -1,0 +1,46 @@
+<?php
+/**
+ * @file
+ * Main module file for the islandora_datastream_tabifier.
+ */
+
+/**
+ * This function implements the Islandora tab hook.
+ * It will add tabs for viewers on as many datastreams
+ * as it possibly can.
+ *
+ * @return tabset
+ *   $tabs The tabs to dispaly at the object level.
+ */
+function islandora_datastream_tabifier_islandora_tabs($content_models, $pid) {
+  module_load_include('inc', 'islandora_datastream_tabifier', 'islandora_datastream_tabifier');
+  module_load_include('inc', 'islandora_viewers', 'islandora_viewers');
+  $tabset = array();
+
+  $fedora_pid = islandora_datastream_tabifier_get_fedora_pid();
+
+  // Don't show tabs on collections.
+  $content_model_pid = $content_models[0]->pid;
+  $collection_content_model_pid = 'islandora:collectionCModel';
+  if ($collection_content_model_pid != $content_model_pid) {
+
+    $display_tabs = islandora_datastream_tabifier_get_display_datastreams($pid);
+    $viewer_found = FALSE;
+    // Display each display datastream.
+    foreach ($display_tabs as $DSID => $mime_type) {
+      $viewer_theme_function = islandora_viewers_get_viewer_theme($mime_type);
+      if ($viewer_theme_function) {
+        $tabset["View $DSID"] = array(
+          '#type' => 'tabpage',
+          '#title' => t('View @dsid', array('@dsid' => $DSID)),
+          '#content' => theme($viewer_theme_function, $pid, $DSID));
+        $viewer_found = TRUE;
+      }
+    }
+    if (!$viewer_found) {
+      drupal_set_message('No viewer set, please check site and object configuration.');
+    }
+  }
+
+  return ($tabset);
+}
