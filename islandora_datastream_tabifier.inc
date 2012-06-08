@@ -23,13 +23,11 @@ function islandora_datastream_tabifier_get_display_datastreams($fedora_pid) {
 
   $object = new FedoraObject($fedora_pid);
   $object_datastreams = $object->get_datastreams();
-  $note_datastream = $object_datastreams['note'];
 
   // Create array of dsid=>mime_type.
   foreach ($object_datastreams as $object_datastreams) {
-    $display_datastreams[$object_datastreams->dsID] = $object_datastreams->dsMIME;
+    $display_datastreams[$object_datastreams->_dsID] = $object_datastreams->dsMIME;
   }
-
   return $display_datastreams;
 }
 /**
