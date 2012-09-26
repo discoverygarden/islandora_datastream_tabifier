@@ -19,14 +19,10 @@ function islandora_datastream_tabifier_get_display_datastreams($fedora_pid) {
   $display_datastreams = array();
 
   // Get the object's datasteams.
-  module_load_include('object.inc', 'islandora_fedora_api');
-
-  $object = new FedoraObject($fedora_pid);
-  $object_datastreams = $object->get_datastreams();
-
-  // Create array of dsid=>mime_type.
-  foreach ($object_datastreams as $object_datastreams) {
-    $display_datastreams[$object_datastreams->_dsID] = $object_datastreams->dsMIME;
+  module_load_include('inc', 'fedora_repository', 'api/tuque');
+  $Fedora_object = islandora_object_load($fedora_pid);
+  foreach ($Fedora_object as $ds) {
+    $display_datastreams[$ds->id] = $ds->mimeType;
   }
   return $display_datastreams;
 }

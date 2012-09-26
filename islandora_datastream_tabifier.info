@@ -3,7 +3,6 @@ description = Shows a tab for each datastream it can.
 package =  Islandora Viewers
 dependencies[] = fedora_repository
 dependencies[] = tabs
-dependencies[] = islandora_fedora_api
 dependencies[] = islandora_viewers
 version = 6.x-$Format:%h$-dev
 core = 6.x
